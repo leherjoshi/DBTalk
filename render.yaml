@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: dbtalk-backend
+    env: python
+    buildCommand: |
+      pip install --upgrade pip setuptools wheel
+      pip install numpy==1.26.4
+      pip install -r requirements.txt
+      python -m agent.build_index
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-flash-latest
+      - key: DATABASE_URL
+        value: sqlite:///./data/olist.db
+      - key: CHROMA_PERSIST_DIR
+        value: ./chroma_store
+      - key: LOG_LEVEL
+        value: INFO
+      - key: ALLOWED_ORIGINS
+        value: "*"

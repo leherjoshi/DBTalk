@@ -1,12 +1,20 @@
-# Natural Language to SQL — Powered by Google Gemini
+# 🧠 DBTalk — Natural Language to SQL
 
 Type a question the way you'd ask a colleague. Receive a working SQL statement and live results pulled straight from the database. No SQL background needed.
 
+[![GitHub](https://img.shields.io/badge/GitHub-leherjoshi%2FDBTalk-blue?logo=github)](https://github.com/leherjoshi/DBTalk)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+[![Google Gemini](https://img.shields.io/badge/AI-Google%20Gemini-orange.svg)](https://ai.google.dev/)
+
 > **Who this is for:** You don't need any background in large language models or vector search to follow along.
+
+**Repository:** https://github.com/leherjoshi/DBTalk
+**Author:** Leher Joshi
 
 ---
 
-## Fork Overview
+## Project Overview
 
 This repository builds on the original [Text-to-SQL project](https://github.com/nerdjerry/text-to-sql) by swapping out the underlying AI provider.
 
@@ -22,13 +30,13 @@ This repository builds on the original [Text-to-SQL project](https://github.com/
 | Language model | OpenAI GPT-4o | Google Gemini (`gemini-flash-latest`) |
 | Embeddings | OpenAI embeddings | Google Gemini (`gemini-embedding-001`) |
 
-**Attribution:** Original work by [@nerdjerry](https://github.com/nerdjerry). Gemini migration by [@yourusername](https://github.com/yourusername).
+**Attribution:** Original work by [@nerdjerry](https://github.com/nerdjerry). Gemini migration and DBTalk build-out by [@leherjoshi](https://github.com/leherjoshi).
 
 ---
 
 ## Contents
 
-1. [Fork Overview](#fork-overview)
+1. [Project Overview](#project-overview)
 2. [Purpose of This Project](#purpose-of-this-project)
 3. [Why Naive Prompting Fails at Scale](#why-naive-prompting-fails-at-scale)
 4. [Design Approach](#design-approach)
@@ -41,6 +49,10 @@ This repository builds on the original [Text-to-SQL project](https://github.com/
 11. [Getting Started](#getting-started)
 12. [Configuration Reference](#configuration-reference)
 13. [Publishing to Git](#publishing-to-git)
+14. [Deployment](#deployment)
+15. [License](#license)
+16. [Acknowledgments](#acknowledgments)
+17. [Contact](#contact)
 
 ---
 
@@ -264,7 +276,7 @@ Here's what happens, end to end, when someone submits: *"Which states have the m
 ## Repository Layout
 
 ```
-text-to-sql/
+DBTalk/
 │
 ├── agent/                      # Core AI pipeline
 │   ├── sql_chain.py            # Main LCEL pipeline: question → SQL → results
@@ -308,6 +320,8 @@ text-to-sql/
 │
 ├── requirements.txt            # Python dependencies
 ├── FEATURES.md                 # Full documentation of the UI feature set
+├── DEPLOY.md                   # Deployment instructions for various platforms
+├── LICENSE                     # MIT License
 └── .env.example                # Copy to .env and fill in your keys
 ```
 
@@ -358,8 +372,8 @@ The database follows a star schema: a central fact table captures measurable bus
 ### 1. Clone the repo and install Python packages
 
 ```bash
-git clone https://github.com/nerdjerry/text-to-sql.git
-cd text-to-sql
+git clone https://github.com/leherjoshi/DBTalk.git
+cd DBTalk
 pip install -r requirements.txt
 ```
 
@@ -440,10 +454,10 @@ Visit [http://localhost:5173](http://localhost:5173) to start querying.
 
 ### Bootstrapping on a fresh machine
 
-1. Clone your fork:
+1. Clone the repo:
    ```bash
-   git clone https://github.com/yourusername/text-to-sql.git
-   cd text-to-sql
+   git clone https://github.com/leherjoshi/DBTalk.git
+   cd DBTalk
    ```
 2. Recreate your environment file:
    ```bash
@@ -466,3 +480,50 @@ Visit [http://localhost:5173](http://localhost:5173) to start querying.
 - The `chroma_store/` vector index is excluded
 
 **Never commit `.env` or expose API keys in a public repository.**
+
+---
+
+## Deployment
+
+Ready to take DBTalk to production? The full walkthrough lives in [`DEPLOY.md`](DEPLOY.md), covering:
+
+- **Railway.app** — recommended; free tier, easiest setup
+- **Render.com** — free tier with SSL included
+- **Vercel + Railway** — best performance combination
+- **Fly.io** — global edge deployment
+- **AWS EC2** — production-grade, self-managed
+
+### Quickest path
+
+Railway or Render are the fastest routes to a live deployment — both offer free tiers well-suited to testing and demos.
+
+**Live demo:** coming soon.
+
+---
+
+## License
+
+Released under the MIT License — free to use, modify, and build on for learning or production projects. See [`LICENSE`](LICENSE) for the full text.
+
+---
+
+## Acknowledgments
+
+- The original text-to-SQL architecture and design patterns this project extends
+- The [Olist Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) on Kaggle
+- The Google Gemini API, which powers the AI layer
+- The broader open-source community for the tools and libraries this project relies on
+
+---
+
+## Contact
+
+**Leher Joshi**
+- GitHub: [@leherjoshi](https://github.com/leherjoshi)
+- Repository: [DBTalk](https://github.com/leherjoshi/DBTalk)
+
+Questions or suggestions are welcome — open an issue on GitHub.
+
+---
+
+**If DBTalk is useful to you, consider giving the repo a star.**

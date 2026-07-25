@@ -25,3 +25,5 @@ services:
         value: "*"
       - key: KAGGLE_API_TOKEN
         sync: false
+      - key: ANONYMIZED_TELEMETRY
+        value: "False"

@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from api.routes import health, query, schema, seed
+from api.routes import health, query, schema
 
 load_dotenv()
 
@@ -53,4 +53,3 @@ async def global_exception_handler(request: Request, exc: Exception) -> JSONResp
 app.include_router(query.router)
 app.include_router(schema.router)
 app.include_router(health.router)
-app.include_router(seed.router)

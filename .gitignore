@@ -1,7 +1,6 @@
 .env
 .env.backup
 *.env
-*.db
 chroma_store/
 venv/
 frontend/dist/

@@ -31,7 +31,8 @@ class Base(DeclarativeBase):
 class FactOrders(Base):
     __tablename__ = "fact_orders"
 
-    order_id = Column(String(64), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    order_id = Column(String(64), nullable=False, index=True)
     user_id = Column(String(64), ForeignKey("dim_users.user_id"), nullable=True, index=True)
     product_id = Column(String(64), ForeignKey("dim_products.product_id"), nullable=True, index=True)
     seller_id = Column(String(64), ForeignKey("dim_sellers.seller_id"), nullable=True, index=True)
@@ -43,7 +44,6 @@ class FactOrders(Base):
     user = relationship("DimUsers", back_populates="orders")
     product = relationship("DimProducts", back_populates="orders")
     seller = relationship("DimSellers", back_populates="orders")
-    review = relationship("DimReviews", back_populates="order", uselist=False)
 
 
 class DimUsers(Base):
@@ -95,11 +95,9 @@ class DimReviews(Base):
     __tablename__ = "dim_reviews"
 
     review_id = Column(String(64), primary_key=True)
-    order_id = Column(String(64), ForeignKey("fact_orders.order_id"), nullable=False, index=True, unique=True)
+    order_id = Column(String(64), nullable=False, index=True)
     review_score = Column(Integer, nullable=True)
     review_comment = Column(Text, nullable=True)
-
-    order = relationship("FactOrders", back_populates="review")
 
 
 class QueryLog(Base):

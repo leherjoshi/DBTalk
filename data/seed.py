@@ -303,7 +303,7 @@ def load_dim_reviews(reviews_df: pd.DataFrame, engine) -> None:
 
 
 def seed() -> None:
-    """Main entry point: create schema, load all dimension and fact tables."""
+    """Main entry point: create schema, load essential dimension and fact tables."""
     maybe_download_from_kaggle()
 
     if not check_csv_files():
@@ -324,32 +324,42 @@ def seed() -> None:
                 logger.info("Database already seeded (%d fact_orders rows). Skipping.", count)
                 return
 
-    logger.info("Reading CSV files from %s...", RAW_DIR)
-    orders_df = pd.read_csv(RAW_DIR / CSV_FILES["orders"])
-    items_df = pd.read_csv(RAW_DIR / CSV_FILES["order_items"])
-    customers_df = pd.read_csv(RAW_DIR / CSV_FILES["customers"])
-    products_df = pd.read_csv(RAW_DIR / CSV_FILES["products"])
-    sellers_df = pd.read_csv(RAW_DIR / CSV_FILES["sellers"])
-    geo_df = pd.read_csv(RAW_DIR / CSV_FILES["geolocation"])
-    reviews_df = pd.read_csv(RAW_DIR / CSV_FILES["reviews"])
-
+    logger.info("Reading CSV files from %s (memory-efficient loading)...", RAW_DIR)
+    
     # Load product category translations if available
     translation_path = RAW_DIR / "product_category_name_translation.csv"
+    products_df = pd.read_csv(RAW_DIR / CSV_FILES["products"])
     if translation_path.exists():
         translations = pd.read_csv(translation_path)
         products_df = products_df.merge(translations, on="product_category_name", how="left")
 
-    # Load dimensions first (referenced by foreign keys)
+    # Load dimensions first
+    customers_df = pd.read_csv(RAW_DIR / CSV_FILES["customers"])
+    sellers_df = pd.read_csv(RAW_DIR / CSV_FILES["sellers"])
+    
     load_dim_users(customers_df, engine)
     load_dim_products(products_df, engine)
     load_dim_sellers(sellers_df, engine)
-    load_dim_geography(geo_df, engine)
-
+    
+    # Skip geography table to save memory (not essential for revenue queries)
+    logger.info("Skipping dim_geography to conserve memory on free tier")
+    
+    # Free memory before loading large orders data
+    del products_df, sellers_df
+    
     # Load fact table
+    logger.info("Loading orders and items data...")
+    orders_df = pd.read_csv(RAW_DIR / CSV_FILES["orders"])
+    items_df = pd.read_csv(RAW_DIR / CSV_FILES["order_items"])
     load_fact_orders(orders_df, items_df, customers_df, engine)
+    
+    del orders_df, items_df, customers_df
 
     # Load review dimension last (needs fact_orders FK)
+    logger.info("Loading reviews data...")
+    reviews_df = pd.read_csv(RAW_DIR / CSV_FILES["reviews"])
     load_dim_reviews(reviews_df, engine)
+    del reviews_df
 
     logger.info("✅ Seed complete!")
 

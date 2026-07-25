@@ -175,7 +175,13 @@ def load_dim_sellers(sellers_df: pd.DataFrame, engine) -> None:
 def load_dim_geography(geo_df: pd.DataFrame, engine) -> None:
     """Load dim_geography from olist_geolocation_dataset.csv (deduplicated by zip+city)."""
     logger.info("Loading dim_geography (raw %d rows)...", len(geo_df))
-    geo_dedup = geo_df.drop_duplicates(subset=["geolocation_zip_code_prefix", "geolocation_city"])
+    
+    # Normalize city names to avoid case-sensitivity duplicates
+    geo_df['geolocation_city'] = geo_df['geolocation_city'].str.strip().str.title()
+    
+    # Deduplicate by zip+city and keep the first occurrence
+    geo_dedup = geo_df.drop_duplicates(subset=["geolocation_zip_code_prefix", "geolocation_city"], keep='first')
+    
     records = [
         {
             "zip_code_prefix": str(row["geolocation_zip_code_prefix"]).zfill(5),
@@ -186,15 +192,24 @@ def load_dim_geography(geo_df: pd.DataFrame, engine) -> None:
         }
         for _, row in geo_dedup.iterrows()
     ]
+    
+    # Additional deduplication in Python to be absolutely sure
+    seen_keys = set()
+    unique_records = []
+    for r in records:
+        key = (r["zip_code_prefix"], r["city"])
+        if key not in seen_keys:
+            seen_keys.add(key)
+            unique_records.append(r)
 
     from sqlalchemy.orm import Session
 
     with Session(engine) as session:
-        for chunk_start in range(0, len(records), 2000):
-            chunk = records[chunk_start : chunk_start + 2000]
+        for chunk_start in range(0, len(unique_records), 2000):
+            chunk = unique_records[chunk_start : chunk_start + 2000]
             session.bulk_insert_mappings(DimGeography, chunk)
             session.commit()
-    logger.info("dim_geography loaded: %d unique zip+city combinations.", len(records))
+    logger.info("dim_geography loaded: %d unique zip+city combinations.", len(unique_records))
 
 
 def load_fact_orders(

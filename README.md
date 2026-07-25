@@ -516,14 +516,7 @@ Released under the MIT License — free to use, modify, and build on for learnin
 
 ---
 
-## Contact
 
-**Leher Joshi**
-- GitHub: [@leherjoshi](https://github.com/leherjoshi)
-- Repository: [DBTalk](https://github.com/leherjoshi/DBTalk)
 
-Questions or suggestions are welcome — open an issue on GitHub.
 
 ---
-
-**If DBTalk is useful to you, consider giving the repo a star.**

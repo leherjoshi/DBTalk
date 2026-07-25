@@ -6,10 +6,6 @@ services:
       pip install --upgrade pip setuptools wheel
       pip install numpy==1.26.4
       pip install -r requirements.txt
-      mkdir -p data/raw
-      pip install kaggle
-      kaggle datasets download -d olistbr/brazilian-ecommerce --unzip -p ./data/raw/
-      python -m data.seed
       python -m agent.build_index
     startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
     envVars:
@@ -20,7 +16,7 @@ services:
       - key: GEMINI_MODEL
         value: gemini-flash-latest
       - key: DATABASE_URL
-        value: sqlite:///./data/olist.db
+        sync: false
       - key: CHROMA_PERSIST_DIR
         value: ./chroma_store
       - key: LOG_LEVEL

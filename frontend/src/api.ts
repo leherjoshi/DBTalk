@@ -1,6 +1,9 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: '/' })
+// Use environment variable for API URL, fallback to production backend
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://dbtalk.onrender.com'
+
+const api = axios.create({ baseURL: API_BASE_URL })
 
 export interface QueryResponse {
   sql: string

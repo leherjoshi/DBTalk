@@ -212,7 +212,7 @@ export default function ChatWindow({ messages, setMessages, onAnswer }: Props) {
             rows={1}
           />
           <button
-            onClick={handleSubmit}
+            onClick={() => handleSubmit()}
             disabled={loading || !question.trim()}
             style={{
               background: loading || !question.trim() ? 'var(--bg-tertiary)' : 'var(--accent-green)',

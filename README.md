@@ -2,35 +2,30 @@
 
 Type a question the way you'd ask a colleague. Receive a working SQL statement and live results pulled straight from the database. No SQL background needed.
 
-[![GitHub](https://img.shields.io/badge/GitHub-leherjoshi%2FDBTalk-blue?logo=github)](https://github.com/leherjoshi/DBTalk)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![Google Gemini](https://img.shields.io/badge/AI-Google%20Gemini-orange.svg)](https://ai.google.dev/)
 
 > **Who this is for:** You don't need any background in large language models or vector search to follow along.
 
-**Repository:** https://github.com/leherjoshi/DBTalk
-**Author:** Leher Joshi
-
 ---
 
 ## Project Overview
 
-This repository builds on the original [Text-to-SQL project](https://github.com/nerdjerry/text-to-sql) by swapping out the underlying AI provider.
+DBTalk is a natural language to SQL query engine powered by Google Gemini AI. Ask questions in plain English and get instant SQL queries with live results from your database.
 
-**Key change:** OpenAI has been replaced end-to-end with the Google Gemini API for query generation and semantic search.
-
-- No dependency on OpenAI — the entire pipeline now runs on Gemini
+**Key Features:**
+- No dependency on OpenAI — the entire pipeline runs on Google Gemini
 - Cost-friendly — Gemini's free tier covers typical development and testing usage
-- Feature-complete — every capability from the original project carries over unchanged
+- Feature-complete — advanced RAG pipeline with semantic search
 - Minimal configuration — a single free API key from [Google AI Studio](https://aistudio.google.com/app/apikey) is all that's required
 
-| Component | Upstream Project | This Fork |
-|---|---|---|
-| Language model | OpenAI GPT-4o | Google Gemini (`gemini-flash-latest`) |
-| Embeddings | OpenAI embeddings | Google Gemini (`gemini-embedding-001`) |
-
-**Attribution:** Original work by [@nerdjerry](https://github.com/nerdjerry). Gemini migration and DBTalk build-out by [@leherjoshi](https://github.com/leherjoshi).
+| Component | Technology |
+|---|---|
+| Language model | Google Gemini (`gemini-flash-latest`) |
+| Embeddings | Google Gemini (`gemini-embedding-001`) |
+| Vector Store | ChromaDB |
+| Database | SQLite / PostgreSQL |
 
 ---
 
@@ -48,11 +43,8 @@ This repository builds on the original [Text-to-SQL project](https://github.com/
 10. [Data Model](#data-model)
 11. [Getting Started](#getting-started)
 12. [Configuration Reference](#configuration-reference)
-13. [Publishing to Git](#publishing-to-git)
-14. [Deployment](#deployment)
-15. [License](#license)
-16. [Acknowledgments](#acknowledgments)
-17. [Contact](#contact)
+13. [Deployment](#deployment)
+14. [License](#license)
 
 ---
 
@@ -369,11 +361,11 @@ The database follows a star schema: a central fact table captures measurable bus
 - Node.js 18 or newer
 - A Google Gemini API key — free to obtain at [Google AI Studio](https://aistudio.google.com/app/apikey)
 
-### 1. Clone the repo and install Python packages
+### 1. Clone and install Python packages
 
 ```bash
-git clone https://github.com/leherjoshi/DBTalk.git
-cd DBTalk
+# Clone the repository
+cd text-to-sql
 pip install -r requirements.txt
 ```
 
@@ -429,57 +421,7 @@ Visit [http://localhost:5173](http://localhost:5173) to start querying.
 | `LOG_LEVEL` | `INFO` | Python logging verbosity (`DEBUG`, `INFO`, `WARNING`, `ERROR`). |
 | `ALLOWED_ORIGINS` | `*` | Comma-separated list of allowed CORS origins; restrict this in production. |
 
-**Note:** OpenAI support existed in earlier versions of this project; the current build relies entirely on Gemini for both embeddings (`gemini-embedding-001`) and chat generation.
-
----
-
-## Publishing to Git
-
-### Checklist before your first push
-
-1. Confirm `.env` isn't tracked:
-   ```bash
-   git status
-   # .env should not show up here
-   ```
-2. Stage and commit your work:
-   ```bash
-   git add .
-   git commit -m "feat: migrate from OpenAI to Google Gemini API"
-   ```
-3. Push:
-   ```bash
-   git push origin main
-   ```
-
-### Bootstrapping on a fresh machine
-
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/leherjoshi/DBTalk.git
-   cd DBTalk
-   ```
-2. Recreate your environment file:
-   ```bash
-   cp .env.example .env
-   # Add your GOOGLE_API_KEY
-   ```
-3. Install and run:
-   ```bash
-   pip install -r requirements.txt
-   python -m agent.build_index
-   uvicorn api.main:app --reload --port 8000
-   ```
-
-### A few security reminders
-
-- `.env` is already excluded via `.gitignore`, so keys stay local
-- `.env.example` gives collaborators a template to follow
-- Bulk CSVs under `data/raw/` are excluded from version control
-- Database files (`*.db`) are excluded
-- The `chroma_store/` vector index is excluded
-
-**Never commit `.env` or expose API keys in a public repository.**
+**Note:** The current build relies entirely on Google Gemini for both embeddings (`gemini-embedding-001`) and chat generation.
 
 ---
 
@@ -497,26 +439,8 @@ Ready to take DBTalk to production? The full walkthrough lives in [`DEPLOY.md`](
 
 Railway or Render are the fastest routes to a live deployment — both offer free tiers well-suited to testing and demos.
 
-**Live demo:** coming soon.
-
 ---
 
 ## License
 
 Released under the MIT License — free to use, modify, and build on for learning or production projects. See [`LICENSE`](LICENSE) for the full text.
-
----
-
-## Acknowledgments
-
-- The original text-to-SQL architecture and design patterns this project extends
-- The [Olist Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) on Kaggle
-- The Google Gemini API, which powers the AI layer
-- The broader open-source community for the tools and libraries this project relies on
-
----
-
-
-
-
----

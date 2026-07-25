@@ -34,14 +34,13 @@ async def seed_database():
                         "message": f"Database already contains {result[0]} products"
                     }
         
-        # Check Kaggle credentials
-        kaggle_user = os.getenv("KAGGLE_USERNAME")
-        kaggle_key = os.getenv("KAGGLE_KEY")
+        # Check Kaggle credentials (new token-based auth)
+        kaggle_token = os.getenv("KAGGLE_API_TOKEN")
         
-        if not kaggle_user or not kaggle_key:
+        if not kaggle_token:
             raise HTTPException(
                 status_code=400,
-                detail="KAGGLE_USERNAME and KAGGLE_KEY environment variables required. Set them in Render dashboard."
+                detail="KAGGLE_API_TOKEN environment variable required. Set it in Render dashboard to: KGAT_89bbae5a481a2a3a9f7d4a3c75538f64"
             )
         
         logger.info("Starting database seeding process...")

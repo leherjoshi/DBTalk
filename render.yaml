@@ -23,7 +23,5 @@ services:
         value: INFO
       - key: ALLOWED_ORIGINS
         value: "*"
-      - key: KAGGLE_USERNAME
-        sync: false
-      - key: KAGGLE_KEY
+      - key: KAGGLE_API_TOKEN
         sync: false

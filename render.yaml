@@ -7,7 +7,8 @@ services:
       pip install numpy==1.26.4
       pip install -r requirements.txt
       python -m agent.build_index
-    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+      chmod +x startup.sh
+    startCommand: ./startup.sh
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
